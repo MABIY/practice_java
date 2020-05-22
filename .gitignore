@@ -8,6 +8,7 @@
 *.class
 out
 gen
+target
 
 ### Example user template template
 ### Example user template
