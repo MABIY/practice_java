@@ -1,3 +1,5 @@
+package lambda_t;
+
 import org.omg.CORBA.INTERNAL;
 
 import java.util.function.Function;

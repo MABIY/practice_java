@@ -1,4 +1,4 @@
-package funcation;
+package lambda_t.funcation;
 
 import java.util.ArrayList;
 import java.util.Arrays;

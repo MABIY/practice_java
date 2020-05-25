@@ -1,8 +1,6 @@
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+package lambda_t;
+
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
