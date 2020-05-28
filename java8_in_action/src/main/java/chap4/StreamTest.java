@@ -114,5 +114,15 @@ public class StreamTest {
         numbers = new int[]{10, 20};
         OptionalInt sum_optional = Arrays.stream(numbers).reduce((a, b) -> a + b);
         System.out.println(sum_optional.getAsInt());
+
+        OptionalInt min = Arrays.stream(numbers).reduce((x, y) -> Math.min(x, y));
+
+        List<Integer> integers1 = Arrays.asList(new Integer[]{1, 2});
+        Optional<Integer> optionalInteger = integers1.stream().reduce(Integer::max);
+
+        int count = Dish.menu.stream()
+                .map(d -> 1)
+                .reduce(0, Integer::sum);
+        long count_stream = Dish.menu.stream().count();
     }
 }
