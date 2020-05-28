@@ -3,6 +3,7 @@ package chap4;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import static java.util.stream.Collectors.toList;
 
@@ -107,5 +108,11 @@ public class StreamTest {
                         .map(x -> x * x)
                         .filter(x -> x % 3 == 0)
                         .findFirst();
+//        reduce
+        int[] numbers = {1, 2, 3};
+        int sum = Arrays.stream(numbers).reduce(0, Integer::sum);
+        numbers = new int[]{10, 20};
+        OptionalInt sum_optional = Arrays.stream(numbers).reduce((a, b) -> a + b);
+        System.out.println(sum_optional.getAsInt());
     }
 }
