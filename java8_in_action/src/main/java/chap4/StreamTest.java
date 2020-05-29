@@ -1,5 +1,9 @@
 package chap4;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -141,5 +145,20 @@ public class StreamTest {
                                     IntStream.rangeClosed(g, 100)
                                             .mapToObj(b -> new double[]{g, b, Math.sqrt(g * g + b * b)})
                                             .filter(t -> t[2] % 1 == 0));
+
+    Stream<String> stream1 = Stream.of("Java 8", "Lambdas ", "In ", "Action");
+    stream1.map(String::toUpperCase).forEach(System.out::println);
+    Stream<String> emptyStream = Stream.empty();
+
+    int[] numbers1 = {2, 3, 4, 5, 6, 7, 11, 13};
+    int sum1 = Arrays.stream(numbers).sum();
+
+    long uniqueWords = 0;
+    try (Stream<String> lines = Files.lines(Paths.get("pom.xml"), Charset.defaultCharset())) {
+      uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" "))).distinct().count();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    System.out.println(uniqueWords);
   }
 }
