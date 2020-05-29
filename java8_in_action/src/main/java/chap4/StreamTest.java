@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -160,5 +161,39 @@ public class StreamTest {
       e.printStackTrace();
     }
     System.out.println(uniqueWords);
+
+    Stream.iterate(0, n -> n + 2)
+            .filter(a1->{
+              System.out.println("a1");
+              return true;
+            })
+            .limit(10).forEach(System.out::println);
+
+    Stream.generate(Math::random)
+            .limit(5)
+            .forEach(System.out::println);
+    IntStream ones = IntStream.generate(() -> 1);
+
+    IntStream twos = IntStream.generate(new IntSupplier() {
+      @Override
+      public int getAsInt() {
+        return 2;
+      }
+    });
+    IntSupplier fib = new IntSupplier() {
+      private int previous = 0;
+      private int current = 1;
+
+      @Override
+      public int getAsInt() {
+        int oldPrevious = previous;
+        int nextValue = previous + current;
+        previous = current;
+        current = nextValue;
+        return oldPrevious;
+      }
+    };
+
+    IntStream.generate(fib).sorted().forEach(System.out::println);
   }
 }
