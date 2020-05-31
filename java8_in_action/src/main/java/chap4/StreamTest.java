@@ -162,13 +162,6 @@ public class StreamTest {
     }
     System.out.println(uniqueWords);
 
-    Stream.iterate(0, n -> n + 2)
-            .filter(a1->{
-              System.out.println("a1");
-              return true;
-            })
-            .limit(10).forEach(System.out::println);
-
     Stream.generate(Math::random)
             .limit(5)
             .forEach(System.out::println);
@@ -180,6 +173,7 @@ public class StreamTest {
         return 2;
       }
     });
+
     IntSupplier fib = new IntSupplier() {
       private int previous = 0;
       private int current = 1;
@@ -195,5 +189,6 @@ public class StreamTest {
     };
 
     IntStream.generate(fib).sorted().forEach(System.out::println);
+
   }
 }
