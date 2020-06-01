@@ -45,11 +45,14 @@ public class GroupingTransactions {
         List<Integer> numbers = stream.parallel().reduce(
                 new ArrayList<>(),
                 (List<Integer> l, Integer e) -> {
-                    l.add(2);
+                    System.out.println(l +" add " + e);
+                    l.add(e);
                     return l;
                 },
                 (List<Integer> l1, List<Integer> l2) -> {
+                    List<Integer> temp = l1;
                     l1.addAll(l2);
+                    System.out.println("l1 "+temp + " add " + "l2 "+l2+ " result" + l1);
                     return l1;
 
                 }
