@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Dish {
+    enum CaloricLevel {DIET, NORMAL, FAT}
+
+    ;
+
 
     private final String name;
     private final boolean vegetarian;

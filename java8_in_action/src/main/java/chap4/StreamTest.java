@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /**
  * @author : lh
@@ -155,40 +152,108 @@ public class StreamTest {
     int sum1 = Arrays.stream(numbers).sum();
 
     long uniqueWords = 0;
-    try (Stream<String> lines = Files.lines(Paths.get("pom.xml"), Charset.defaultCharset())) {
-      uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" "))).distinct().count();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    System.out.println(uniqueWords);
-
-    Stream.generate(Math::random)
-            .limit(5)
-            .forEach(System.out::println);
-    IntStream ones = IntStream.generate(() -> 1);
-
-    IntStream twos = IntStream.generate(new IntSupplier() {
-      @Override
-      public int getAsInt() {
-        return 2;
+      try (Stream<String> lines = Files.lines(Paths.get("pom.xml"), Charset.defaultCharset())) {
+          uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" "))).distinct().count();
+      } catch (IOException e) {
+          e.printStackTrace();
       }
-    });
+      System.out.println(uniqueWords);
 
-    IntSupplier fib = new IntSupplier() {
-      private int previous = 0;
-      private int current = 1;
+      Stream.generate(Math::random).limit(5).forEach(System.out::println);
+      IntStream ones = IntStream.generate(() -> 1);
 
-      @Override
-      public int getAsInt() {
-        int oldPrevious = previous;
-        int nextValue = previous + current;
-        previous = current;
-        current = nextValue;
-        return oldPrevious;
-      }
-    };
+      IntStream twos =
+              IntStream.generate(
+                      new IntSupplier() {
+                          @Override
+                          public int getAsInt() {
+                              return 2;
+                          }
+                      });
 
-    IntStream.generate(fib).sorted().forEach(System.out::println);
+      IntSupplier fib =
+              new IntSupplier() {
+                  private int previous = 0;
+                  private int current = 1;
 
+                  @Override
+                  public int getAsInt() {
+                      int oldPrevious = previous;
+                      int nextValue = previous + current;
+                      previous = current;
+                      current = nextValue;
+                      return oldPrevious;
+                  }
+              };
+
+      Map<Dish.Type, Map<String, List<Dish>>> dishesByTypeCaloricLevel =
+              Dish.menu.stream()
+                      .collect(
+                              groupingBy(
+                                      Dish::getType,
+                                      groupingBy(
+                                              dish1 -> {
+                                                  if (dish1.getCalories() < 400) {
+                                                      return "DIEF";
+                                                  } else if (dish1.getCalories() <= 700) {
+                                                      return "NORMAL";
+                                                  } else {
+                                                      return "FAT";
+                                                  }
+                                              })));
+      System.out.println(dishesByTypeCaloricLevel);
+      Map<Dish.Type, Long> typesCount =
+              Dish.menu.stream().collect(groupingBy(Dish::getType, counting()));
+      System.out.println(typesCount);
+
+      Map<Dish.Type, Optional<Dish>> mostCaloricByType =
+              Dish.menu.stream()
+                      .collect(groupingBy(Dish::getType, maxBy(Comparator.comparingInt(Dish::getCalories))));
+      System.out.println(mostCaloricByType);
+      Map<Dish.Type, Dish> mostCaloricByTypeGet =
+              Dish.menu.stream()
+                      .collect(
+                              groupingBy(
+                                      Dish::getType,
+                                      collectingAndThen(
+                                              maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
+
+      Map<Dish.Type, Integer> totalCaloriesByType =
+              Dish.menu.stream().collect(groupingBy(Dish::getType, summingInt(Dish::getCalories)));
+
+      Map<Dish.Type, Set<Dish.CaloricLevel>> caloricLevelsByType =
+              Dish.menu.stream()
+                      .collect(
+                              groupingBy(
+                                      Dish::getType,
+                                      mapping(
+                                              dish_1 -> {
+                                                  if (dish_1.getCalories() <= 400) {
+                                                      return Dish.CaloricLevel.DIET;
+                                                  } else if (dish_1.getCalories() <= 700) {
+                                                      return Dish.CaloricLevel.NORMAL;
+                                                  } else {
+                                                      return Dish.CaloricLevel.FAT;
+                                                  }
+                                              },
+                                              toSet())));
+
+      caloricLevelsByType =
+              Dish.menu.stream()
+                      .collect(
+                              groupingBy(
+                                      Dish::getType,
+                                      mapping(
+                                              dish_2 -> {
+                                                  if (dish_2.getCalories() <= 400) {
+                                                      return Dish.CaloricLevel.DIET;
+                                                  } else if (dish_2.getCalories() <= 700) {
+                                                      return Dish.CaloricLevel.NORMAL;
+                                                  } else {
+                                                      return Dish.CaloricLevel.FAT;
+                                                  }
+                                              },
+                                              toCollection(HashSet::new))));
+      System.out.println(caloricLevelsByType);
   }
 }
