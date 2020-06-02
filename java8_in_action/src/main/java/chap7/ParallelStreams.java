@@ -1,6 +1,7 @@
 package chap7;
 
 import java.util.function.Function;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**
@@ -8,12 +9,6 @@ import java.util.stream.Stream;
  * @since : 2020/6/2, Tue
  **/
 public class ParallelStreams {
-    public static long sequentialSum(long n) {
-        return Stream.iterate(1L, i -> i + 1)
-                .limit(n)
-                .reduce(0L, Long::sum);
-    }
-
     public static long iterativeSum(long n) {
         long result = 0;
         for (int i = 0; i <= n; i++) {
@@ -45,6 +40,23 @@ public class ParallelStreams {
         return fastest;
     }
 
+    public static long rangedSum(long n) {
+        return LongStream.rangeClosed(1, n)
+                .reduce(0L, Long::sum);
+    }
+
+    public static long sequentialSum(long n) {
+        return Stream.iterate(1L, i -> i + 1)
+                .limit(n)
+                .reduce(0L, Long::sum);
+    }
+
+    public static long parallelRangeSum(long n) {
+        return LongStream.rangeClosed(1, n)
+                .parallel()
+                .reduce(0L, Long::sum);
+    }
+
     public static void main(String[] args) {
 //        System.out.println("Sequential sum done in:" +
 //                measureSumPerf(ParallelStreams::sequentialSum, 10_000_000) + " msecs");
@@ -52,9 +64,14 @@ public class ParallelStreams {
 //        System.out.println("iterativeSum sum done in:" +
 //                measureSumPerf(ParallelStreams::iterativeSum, 10_000_000) + " msecs");
 
-        System.out.println("parallelSum sum done in:" +
-                measureSumPerf(ParallelStreams::parallelSum, 10_000_000) + " msecs");
+//        System.out.println("parallelSum sum done in:" +
+//                measureSumPerf(ParallelStreams::parallelSum, 10_000_000) + " msecs");
 
+//        System.out.println("ranged sum done in:" +
+//                measureSumPerf(ParallelStreams::rangedSum, 10_000_000) + " msecs");
+
+        System.out.println("parallelRangeSum sum done in:" +
+                measureSumPerf(ParallelStreams::parallelRangeSum, 10_000_000) + " msecs");
     }
 
 
