@@ -283,12 +283,12 @@ public class StreamTest {
 //    return IntStream.range(2, candidate).noneMatch(i -> candidate % i == 0);
 //  }
 
-  public boolean isPrime(int candidate) {
+  public static boolean isPrime(int candidate) {
     int candidateRoot = (int) Math.sqrt(candidate);
     return IntStream.rangeClosed(2, candidateRoot).noneMatch(i -> candidate % i == 0);
   }
 
-  public Map<Boolean, List<Integer>> partitionPrimes(int n) {
+  public static Map<Boolean, List<Integer>> partitionPrimes(int n) {
     return IntStream.rangeClosed(2, n).boxed().collect(partitioningBy(candidate -> isPrime(candidate)));
   }
 
