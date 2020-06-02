@@ -5,7 +5,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.IntSupplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -152,108 +154,145 @@ public class StreamTest {
     int sum1 = Arrays.stream(numbers).sum();
 
     long uniqueWords = 0;
-      try (Stream<String> lines = Files.lines(Paths.get("pom.xml"), Charset.defaultCharset())) {
-          uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" "))).distinct().count();
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-      System.out.println(uniqueWords);
+    try (Stream<String> lines = Files.lines(Paths.get("pom.xml"), Charset.defaultCharset())) {
+      uniqueWords = lines.flatMap(line -> Arrays.stream(line.split(" "))).distinct().count();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    System.out.println(uniqueWords);
 
-      Stream.generate(Math::random).limit(5).forEach(System.out::println);
-      IntStream ones = IntStream.generate(() -> 1);
+    Stream.generate(Math::random).limit(5).forEach(System.out::println);
+    IntStream ones = IntStream.generate(() -> 1);
 
-      IntStream twos =
-              IntStream.generate(
-                      new IntSupplier() {
-                          @Override
-                          public int getAsInt() {
-                              return 2;
-                          }
-                      });
+    IntStream twos =
+            IntStream.generate(
+                    new IntSupplier() {
+                      @Override
+                      public int getAsInt() {
+                        return 2;
+                      }
+                    });
 
-      IntSupplier fib =
-              new IntSupplier() {
-                  private int previous = 0;
-                  private int current = 1;
+    IntSupplier fib =
+            new IntSupplier() {
+              private int previous = 0;
+              private int current = 1;
 
-                  @Override
-                  public int getAsInt() {
-                      int oldPrevious = previous;
-                      int nextValue = previous + current;
-                      previous = current;
-                      current = nextValue;
-                      return oldPrevious;
-                  }
-              };
+              @Override
+              public int getAsInt() {
+                int oldPrevious = previous;
+                int nextValue = previous + current;
+                previous = current;
+                current = nextValue;
+                return oldPrevious;
+              }
+            };
 
-      Map<Dish.Type, Map<String, List<Dish>>> dishesByTypeCaloricLevel =
-              Dish.menu.stream()
-                      .collect(
-                              groupingBy(
-                                      Dish::getType,
-                                      groupingBy(
-                                              dish1 -> {
-                                                  if (dish1.getCalories() < 400) {
-                                                      return "DIEF";
-                                                  } else if (dish1.getCalories() <= 700) {
-                                                      return "NORMAL";
-                                                  } else {
-                                                      return "FAT";
-                                                  }
-                                              })));
-      System.out.println(dishesByTypeCaloricLevel);
-      Map<Dish.Type, Long> typesCount =
-              Dish.menu.stream().collect(groupingBy(Dish::getType, counting()));
-      System.out.println(typesCount);
+    Map<Dish.Type, Map<String, List<Dish>>> dishesByTypeCaloricLevel =
+            Dish.menu.stream()
+                    .collect(
+                            groupingBy(
+                                    Dish::getType,
+                                    groupingBy(
+                                            dish1 -> {
+                                              if (dish1.getCalories() < 400) {
+                                                return "DIEF";
+                                              } else if (dish1.getCalories() <= 700) {
+                                                return "NORMAL";
+                                              } else {
+                                                return "FAT";
+                                              }
+                                            })));
+    System.out.println(dishesByTypeCaloricLevel);
+    Map<Dish.Type, Long> typesCount =
+            Dish.menu.stream().collect(groupingBy(Dish::getType, counting()));
+    System.out.println(typesCount);
 
-      Map<Dish.Type, Optional<Dish>> mostCaloricByType =
-              Dish.menu.stream()
-                      .collect(groupingBy(Dish::getType, maxBy(Comparator.comparingInt(Dish::getCalories))));
-      System.out.println(mostCaloricByType);
-      Map<Dish.Type, Dish> mostCaloricByTypeGet =
-              Dish.menu.stream()
-                      .collect(
-                              groupingBy(
-                                      Dish::getType,
-                                      collectingAndThen(
-                                              maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
+    Map<Dish.Type, Optional<Dish>> mostCaloricByType =
+            Dish.menu.stream()
+                    .collect(groupingBy(Dish::getType, maxBy(Comparator.comparingInt(Dish::getCalories))));
+    System.out.println(mostCaloricByType);
+    Map<Dish.Type, Dish> mostCaloricByTypeGet =
+            Dish.menu.stream()
+                    .collect(
+                            groupingBy(
+                                    Dish::getType,
+                                    collectingAndThen(
+                                            maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
 
-      Map<Dish.Type, Integer> totalCaloriesByType =
-              Dish.menu.stream().collect(groupingBy(Dish::getType, summingInt(Dish::getCalories)));
+    Map<Dish.Type, Integer> totalCaloriesByType =
+            Dish.menu.stream().collect(groupingBy(Dish::getType, summingInt(Dish::getCalories)));
 
-      Map<Dish.Type, Set<Dish.CaloricLevel>> caloricLevelsByType =
-              Dish.menu.stream()
-                      .collect(
-                              groupingBy(
-                                      Dish::getType,
-                                      mapping(
-                                              dish_1 -> {
-                                                  if (dish_1.getCalories() <= 400) {
-                                                      return Dish.CaloricLevel.DIET;
-                                                  } else if (dish_1.getCalories() <= 700) {
-                                                      return Dish.CaloricLevel.NORMAL;
-                                                  } else {
-                                                      return Dish.CaloricLevel.FAT;
-                                                  }
-                                              },
-                                              toSet())));
+    Map<Dish.Type, Set<Dish.CaloricLevel>> caloricLevelsByType =
+            Dish.menu.stream()
+                    .collect(
+                            groupingBy(
+                                    Dish::getType,
+                                    mapping(
+                                            dish_1 -> {
+                                              if (dish_1.getCalories() <= 400) {
+                                                return Dish.CaloricLevel.DIET;
+                                              } else if (dish_1.getCalories() <= 700) {
+                                                return Dish.CaloricLevel.NORMAL;
+                                              } else {
+                                                return Dish.CaloricLevel.FAT;
+                                              }
+                                            },
+                                            toSet())));
 
-      caloricLevelsByType =
-              Dish.menu.stream()
-                      .collect(
-                              groupingBy(
-                                      Dish::getType,
-                                      mapping(
-                                              dish_2 -> {
-                                                  if (dish_2.getCalories() <= 400) {
-                                                      return Dish.CaloricLevel.DIET;
-                                                  } else if (dish_2.getCalories() <= 700) {
-                                                      return Dish.CaloricLevel.NORMAL;
-                                                  } else {
-                                                      return Dish.CaloricLevel.FAT;
-                                                  }
-                                              },
-                                              toCollection(HashSet::new))));
-      System.out.println(caloricLevelsByType);
+    caloricLevelsByType =
+            Dish.menu.stream()
+                    .collect(
+                            groupingBy(
+                                    Dish::getType,
+                                    mapping(
+                                            dish_2 -> {
+                                              if (dish_2.getCalories() <= 400) {
+                                                return Dish.CaloricLevel.DIET;
+                                              } else if (dish_2.getCalories() <= 700) {
+                                                return Dish.CaloricLevel.NORMAL;
+                                              } else {
+                                                return Dish.CaloricLevel.FAT;
+                                              }
+                                            },
+                                            toCollection(HashSet::new))));
+    System.out.println(caloricLevelsByType);
+
+    Map<Boolean, List<Dish>> partitionedMenu =
+            Dish.menu.stream().collect(partitioningBy(Dish::isVegetarian));
+    System.out.println(partitionedMenu);
+    List<Dish> vegetarianDishes = Dish.menu.stream().filter(Dish::isVegetarian).collect(toList());
+
+    Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType =
+            Dish.menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+    System.out.println(vegetarianDishesByType);
+
+    Map<Boolean, Dish> mostCaloricPartitionedByVegetarian =
+            Dish.menu.stream()
+                    .collect(
+                            partitioningBy(
+                                    Dish::isVegetarian,
+                                    collectingAndThen(
+                                            maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
+    System.out.println(mostCaloricPartitionedByVegetarian);
+    Collection<Dish> dishesf = Dish.menu.stream().collect(Collectors.toCollection(HashSet::new));
+
+  }
+
+//  public boolean isPrime(int candidate) {
+//    return IntStream.range(2, candidate).noneMatch(i -> candidate % i == 0);
+//  }
+
+  public boolean isPrime(int candidate) {
+    int candidateRoot = (int) Math.sqrt(candidate);
+    return IntStream.rangeClosed(2, candidateRoot).noneMatch(i -> candidate % i == 0);
+  }
+
+  public Map<Boolean, List<Integer>> partitionPrimes(int n) {
+    return IntStream.rangeClosed(2, n).boxed().collect(partitioningBy(candidate -> isPrime(candidate)));
+  }
+
+  public BiConsumer<List, ?> accumulator() {
+    return List::add;
   }
 }
