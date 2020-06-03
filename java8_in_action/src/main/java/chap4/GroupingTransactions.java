@@ -2,7 +2,6 @@ package chap4;
 
 import java.util.*;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static chap4.Dish.menu;
@@ -45,14 +44,14 @@ public class GroupingTransactions {
         List<Integer> numbers = stream.parallel().reduce(
                 new ArrayList<>(),
                 (List<Integer> l, Integer e) -> {
-                    System.out.println(l +" add " + e);
+                    System.out.println(Thread.currentThread() + ": " + l + " add " + e);
                     l.add(e);
                     return l;
                 },
                 (List<Integer> l1, List<Integer> l2) -> {
                     List<Integer> temp = l1;
                     l1.addAll(l2);
-                    System.out.println("l1 "+temp + " add " + "l2 "+l2+ " result" + l1);
+                    System.out.println(Thread.currentThread() + ": " + "l1 " + temp + " add " + "l2 " + l2 + " result" + l1);
                     return l1;
 
                 }

@@ -77,8 +77,12 @@ public class ParallelStreams {
 //        System.out.println("SideEffect sum done in: " +
 //                measureSumPerf(ParallelStreams::sideEffectSum, 10_000_000L) + " msec");
 
-        System.out.println("SideEffect parallel sum done in: " +
-                measureSumPerf(ParallelStreams::sideEffectParallelSum, 10_000_000L) + " msec");
+//        System.out.println("SideEffect parallel sum done in: " +
+//                measureSumPerf(ParallelStreams::sideEffectParallelSum, 10_000_000L) + " msec");
+
+
+        System.out.println("SideEffect sum done in: " +
+                measureSumPerf(ForkJoinSumCalculator::forkJoinSum, 10_000_000L) + " msec");
     }
 
 
