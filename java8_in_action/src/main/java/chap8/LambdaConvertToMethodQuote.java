@@ -24,7 +24,6 @@ public class LambdaConvertToMethodQuote {
                         .reduce(0, (c1, c2) -> c1 + c2);
     }
 
-    // test
     {
         int totalCalories = Dish.menu.stream().collect(summingInt(Dish::getCalories));
     }
