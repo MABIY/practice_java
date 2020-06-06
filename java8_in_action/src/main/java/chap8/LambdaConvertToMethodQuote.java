@@ -41,9 +41,9 @@ public class LambdaConvertToMethodQuote {
         // 替换成
         dishNames = Dish.menu.parallelStream()
                 .filter(d -> {
-                    System.out.println(Thread.currentThread());
                     return d.getCalories() > 300;
                 })
+                //.sorted(Comparator.comparingInt(Dish::getCalories))
                 .map(Dish::getName)
                 .collect(Collectors.toList());
         System.out.println("stream dishNames result: " + dishNames);
