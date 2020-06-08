@@ -17,7 +17,11 @@ public class Dish {
                     new Dish("salmon", false, 450, Dish.Type.FISH));
 
 
-    private final String name;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
     private final boolean vegetarian;
     private final int calories;
     private final Type type;
