@@ -1,4 +1,4 @@
-package char10;
+package chap10;
 
 /**
  * @author lh

@@ -1,7 +1,6 @@
-package char10;
+package chap10;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
  * @author lh
