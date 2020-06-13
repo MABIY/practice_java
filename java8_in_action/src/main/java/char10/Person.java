@@ -1,6 +1,7 @@
 package char10;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * @author lh
@@ -35,4 +36,19 @@ public class Person {
     public static  Insurance findCheapestInsurance(Person person, Car car) {
         return null;
     }
+
+    Optional<Insurance> opInsurance = Optional.ofNullable(null);
+
+    {
+        opInsurance.filter(insurance -> "CambridgeInsurance".equals(insurance.getName())).ifPresent(x -> System.out.println("ok"));
+    }
+
+    public static Optional<Integer> stringToInt(String s) {
+        try {
+            return Optional.of(Integer.parseInt(s));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
 }
