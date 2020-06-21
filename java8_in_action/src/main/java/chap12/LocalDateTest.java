@@ -1,9 +1,6 @@
 package chap12;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.time.temporal.ChronoField;
 
 /**
@@ -30,5 +27,14 @@ public class LocalDateTest {
         int second = time.getSecond();
         LocalDate dateByParse = LocalDate.parse("2014-03-18");
         LocalTime timeByParse = LocalTime.parse("13:45:20");
+
+        LocalDateTime dt1 = LocalDateTime.of(2014, Month.MARCH, 18, 13, 45, 20);
+        LocalDateTime dt2 = LocalDateTime.of(date, time);
+        LocalDateTime dt3 = date.atTime(13, 45, 20);
+        LocalDateTime dt4 = date.atTime(time);
+        LocalDateTime dt5 = time.atDate(date);
+
+        LocalDate date1 = dt1.toLocalDate();
+        LocalDate time1 = dt1.toLocalTime();
     }
 }
