@@ -35,6 +35,6 @@ public class LocalDateTest {
         LocalDateTime dt5 = time.atDate(date);
 
         LocalDate date1 = dt1.toLocalDate();
-        LocalDate time1 = dt1.toLocalTime();
+        LocalTime time1 = dt1.toLocalTime();
     }
 }
