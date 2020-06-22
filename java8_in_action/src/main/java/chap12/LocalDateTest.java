@@ -3,6 +3,7 @@ package chap12;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * @author : lh
@@ -58,5 +59,24 @@ public class LocalDateTest {
         Period tenDays1 = Period.ofDays(10);
         Period threeWeeks = Period.ofWeeks(3);
         Period twoYearsSixMonthsOneDay = Period.of(2, 6, 1);
+
+        LocalDate date1_t = LocalDate.of(2014, 3, 18);
+        LocalDate date2_t = date1_t.withYear(2011);
+        LocalDate date3_t = date2_t.withDayOfMonth(25);
+        LocalDate date4_t = date3_t.with(ChronoField.MONTH_OF_YEAR, 9);
+
+        LocalDate date1_1 = LocalDate.of(2014, 3, 18);
+        LocalDate date2_2 = date1_1.plusWeeks(1);
+        LocalDate date3_3 = date2_2.minusYears(3);
+        LocalDate date4_4 = date3_3.plus(6, ChronoUnit.MONTHS);
+
+        LocalDate date_test = LocalDate.of(2014, 3, 18);
+        date_test = date_test.with(ChronoField.MONTH_OF_YEAR, 9);
+        date_test = date_test.plusYears(2).minusDays(10);
+        date_test = date_test.withYear(2011);
+
+        LocalDate date1_Ad = LocalDate.of(2014, 3, 18);
+        LocalDate date2_Ad = date1_Ad.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        LocalDate date3_Ad = date2_Ad.with(TemporalAdjusters.lastDayOfMonth());
     }
 }
