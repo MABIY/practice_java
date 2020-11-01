@@ -1,5 +1,7 @@
 package practice.chap4;
 
+import java.util.Optional;
+
 /**
  * @author lh
  */
@@ -12,6 +14,9 @@ public class DishTest {
         {
             boolean isHealthy = Dish.menu.stream().noneMatch(dish -> dish.getCalories() >= 1000);
             System.out.println("none menus calories  big or equal 10000: " + isHealthy);
+        }
+        {
+            Optional<Dish> dish = Dish.menu.stream().findAny();
         }
     }
 }
