@@ -6,6 +6,7 @@ import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author lh
@@ -43,6 +44,17 @@ public class DishTest {
         {
             int count = Dish.menu.stream().map(dish -> 1).reduce(0, (a, b) -> a + b);
             System.out.println("count value: " + count);
+        }
+
+        {
+            int calories = Dish.menu.stream()
+                    .mapToInt(Dish::getCalories)
+                    .sum();
+        }
+
+        {
+            IntStream intStream = Dish.menu.stream().mapToInt(Dish::getCalories);
+            Stream<Integer> stream = intStream.boxed();
         }
     }
 }
