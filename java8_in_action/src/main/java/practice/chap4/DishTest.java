@@ -3,8 +3,11 @@ package practice.chap4;
 import org.omg.CORBA.INTERNAL;
 
 import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -56,5 +59,60 @@ public class DishTest {
             IntStream intStream = Dish.menu.stream().mapToInt(Dish::getCalories);
             Stream<Integer> stream = intStream.boxed();
         }
+
+        {
+            OptionalInt maxCalories = Dish.menu
+                    .stream().mapToInt(Dish::getCalories)
+                    .max();
+
+            int max = maxCalories.orElse(1);
+        }
+        
+        {
+            IntStream evenNumbers = IntStream.rangeClosed(1, 100).filter(n -> n % 2 == 0);
+            System.out.println(evenNumbers.count());
+
+            evenNumbers = IntStream.range(1, 100).filter(n -> n % 2 == 0);
+            System.out.println(evenNumbers.count());
+
+        }
+        {
+            IntStream.range(1, 100).boxed().collect(Collectors.counting());
+        }
+
+        {
+            Map<Dish.Type, List<Dish>> dishesByType = Dish.menu.stream().collect(Collectors.groupingBy(Dish::getType));
+            System.out.println(dishesByType);
+
+        }
+        {
+            Map<CaloricLevel, List<Dish>> dishesByCaloricLevel = Dish.menu.stream().collect(Collectors.groupingBy(dish -> {
+                if (dish.getCalories() <= 400) {
+                    return CaloricLevel.DIEF;
+                } else if (dish.getCalories() <= 700) {
+                    return CaloricLevel.NORMAL;
+                }
+                return CaloricLevel.FAT;
+            }));
+            System.out.println(dishesByCaloricLevel);
+        }
+
+        {
+            Map<Dish.Type, Map<CaloricLevel, List<Dish>>> dishesByTypeCaloricLevel = Dish.menu.stream().collect(
+                    Collectors.groupingBy(Dish::getType, Collectors.groupingBy(dish -> {
+                                if (dish.getCalories() <= 400) {
+                                    return CaloricLevel.DIEF;
+                                } else if (dish.getCalories() <= 700) {
+                                    return CaloricLevel.NORMAL;
+                                }
+                                return CaloricLevel.FAT;
+                            }
+                    ))
+            );
+            System.out.println(dishesByTypeCaloricLevel);
+
+        }
     }
+
+    public enum CaloricLevel {DIEF,NORMAL,FAT};
 }
