@@ -1,8 +1,11 @@
 package chap7;
 
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+
+import static chap7.Test.SENTENCE;
 
 /**
  * @author : lh
@@ -58,6 +61,7 @@ public class ParallelStreams {
     }
 
     public static void main(String[] args) {
+        "123".substring(0, 1);
 //        System.out.println("Sequential sum done in:" +
 //                measureSumPerf(ParallelStreams::sequentialSum, 10_000_000) + " msecs");
 
@@ -83,7 +87,16 @@ public class ParallelStreams {
 
         System.out.println("SideEffect sum done in: " +
                 measureSumPerf(ForkJoinSumCalculator::forkJoinSum, 10_000_000L) + " msec");
+        IntStream.range(1, 10).reduce(0, (left, right) -> left + right);
     }
+
+    private int countWords(Stream<Character> stream) {
+        WordCounter wordCounter = stream.reduce(new WordCounter(0, true),
+                WordCounter::accumulate,
+                WordCounter::combine);
+        return wordCounter.getCounter();
+    }
+
 
 
     public static long sideEffectSum(long n) {
