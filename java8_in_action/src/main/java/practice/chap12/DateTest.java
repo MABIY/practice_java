@@ -5,6 +5,8 @@ import chap12.LocalDateTest;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 /**
@@ -77,6 +79,10 @@ public class DateTest {
         date_11 = date_11.with(ChronoField.MONTH_OF_YEAR, 9);
         date_11 = date_11.plusYears(2).minusDays(10);
         date_11.withYear(2011);
+
+        LocalDate date1_ = LocalDate.of(2014, 3, 18);
+        LocalDate date2_ = date1_.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
         System.out.println();
     }
 }

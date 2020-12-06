@@ -11,6 +11,7 @@
     <modules>
         <module>java8_in_action</module>
         <module>java_one</module>
+        <module>java8_lambdas_functinoal_programming_for_the_masses</module>
     </modules>
     <properties>
         <!--start 指定 maven compiler  的-source -target 目标 同时影响 idea java language level -->
